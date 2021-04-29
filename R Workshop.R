@@ -63,28 +63,21 @@ library(hflights) #dataset
               flights<-data.frame(hflights)
               
               
-              # base R approach to view all flights on January 1
+        # base R approach to view all flights on January 1
               flights[flights$Month==1 & flights$DayofMonth==1, ]
               
               
-              # dplyr approach
-              # note: you can use comma or ampersand to represent AND condition
-              filter(flights, Month==1, DayofMonth==1)
+        # use pipe for OR condition
+         flights[flights$UniqueCarrier=="AA" | flights$UniqueCarrier=="UA", ]
               
-              # use pipe for OR condition
-              filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA")
-              
-              
-              # you can also use %in% operator
+        # in dplyr     
+          # you can also use %in% operator
               filter(flights, UniqueCarrier %in% c("AA", "UA"))
               
-              # show the amount of rows of a dataset
-              nrow(flights)
+        # show the amount of rows of a dataset
+            nrow(flights)
               
-              ## select: Pick columns by name
-              
-              #* Base R approach is awkward to type and to read
-              #* dplyr approach uses similar syntax to `filter`
+        ## select: Pick columns by name
               
               
               # select DepTime, ArrTime, and FlightNum columns
@@ -114,55 +107,27 @@ library(hflights) #dataset
               # create new variable
               # base R approach to create a new variable Speed (in mph)
               flights$Speed <- flights$Distance / flights$AirTime*60
-              flights[, c("Distance", "AirTime", "Speed")]
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Data Manipulation
-library(dplyr)    # for data cleaning 
-          #-------------------------------------------------------------------    
-              
-              ## "Chaining" or "Pipelining"
-              
-              #* Usual way to perform multiple operations in one line is by nesting
-              #* Can write commands in a natural order by using the `%>%` infix operator (which can be pronounced as "then")
-              
-              # EXAMPLE
-              # nesting method to select UniqueCarrier and DepDelay columns and filter for delays over 60 minutes
-              filter(select(flights, UniqueCarrier, DepDelay), DepDelay > 60)
-              
-              # EXERCISE 1
-              # for each carrier, calculate the percentage of flights cancelled or diverted
-              
-              # ANSWER
-              flights %>%
-                group_by(UniqueCarrier) %>%
-                summarise_each(funs(mean), Cancelled, Diverted)
-              
-              # EXERCISE 2
-              # for each carrier, calculate the minimum and maximum arrival and departure delays
-             
-              # ANSWER
-               flights %>%
-                group_by(UniqueCarrier) %>%
-                summarise_each(funs(min(., na.rm=TRUE), max(., na.rm=TRUE)), matches("Delay"))
               
               
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LOOPS          
-  # loops
-      # for loop
-            # EXMAPLE 1
+              
+ #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LOOPS          
+              # loops
+              # for loop
+              # EXMAPLE 1
               # Create fruit vector
               fruit <- c('Apple', 'Orange', 'Passion fruit', 'Banana')
               # Create the for statement
               for ( i in fruit){ 
                 print(i)
               }
-      # if loop
-        # EXAMPLE 1
+              # if loop
+              # EXAMPLE 1
               quantity <-  25
               # Set the is-else statement
               if (quantity > 20) {
                 print('You sold a lot!')
               }
-        # EXAMPLE 2
+              # EXAMPLE 2
               # set dataset
               fruit <- c('Apple', 'Orange', 'Passion fruit', 'Banana')
               lunches<-c(1,2,3,4)
@@ -175,7 +140,7 @@ library(dplyr)    # for data cleaning
                 }
               }
               
-        # Exercise: create an "if" loop to identify the people that stayed for more than 2 years in the military elite in Authoritarian Argentina
+              # Exercise: create an "if" loop to identify the people that stayed for more than 2 years in the military elite in Authoritarian Argentina
               
               
               # Answer:
@@ -185,7 +150,7 @@ library(dplyr)    # for data cleaning
                 }
               }
               
-    # if else loop
+              # if else loop
               
               #EXAMPLE 1
               
@@ -209,26 +174,26 @@ library(dplyr)    # for data cleaning
               bar_tap<-data.frame(drinks, quantity)
               
               # create an if else loop that returns:
-                # 1) if quantity < 10, print drink "<--Didn't like it much"
-                # 2) if quantity >=10 and quantity < 20 , print drink "<--I liked this"
-                # 3) if quantity > 20 , print drink "<--I LOVED it!"
-                
+              # 1) if quantity < 10, print drink "<--Didn't like it much"
+              # 2) if quantity >=10 and quantity < 20 , print drink "<--I liked this"
+              # 3) if quantity > 20 , print drink "<--I LOVED it!"
+              
               
               # ANSWER
               for (i in (1:nrow(bar_tap))){
-              # Create multiple condition statement
-              if (bar_tap$quantity[i]<10) {
-                print(paste(bar_tap$drinks[i], "<--Didn't like it much"))
-              } else if (bar_tap$quantity[i] >= 10  & bar_tap$quantity[i] < 20) {
-                print(paste(bar_tap$drinks[i], "<--I liked this"))
-              } else {
-                print(paste(bar_tap$drinks[i], "<--I LOVED it!"))
-              }
+                # Create multiple condition statement
+                if (bar_tap$quantity[i]<10) {
+                  print(paste(bar_tap$drinks[i], "<--Didn't like it much"))
+                } else if (bar_tap$quantity[i] >= 10  & bar_tap$quantity[i] < 20) {
+                  print(paste(bar_tap$drinks[i], "<--I liked this"))
+                } else {
+                  print(paste(bar_tap$drinks[i], "<--I LOVED it!"))
+                }
               }
               
-     # while loop
+              # while loop
               
-            #  EXAMPLE
+              #  EXAMPLE
               
               i <- 1
               while (i < 6) {
@@ -237,18 +202,18 @@ library(dplyr)    # for data cleaning
               }
               
               # EXERCISE
-                # Make a dataframe for all countries that have a below average perception of corruption.
-                # make sure to include the years each country is mentioned, because we also want to verify
-                # the consistency of these countries and their low corruption
-                # we don't want to move to a country that had low corruption for ONE year only!
+              # Make a dataframe for all countries that have a below average perception of corruption.
+              # make sure to include the years each country is mentioned, because we also want to verify
+              # the consistency of these countries and their low corruption
+              # we don't want to move to a country that had low corruption for ONE year only!
               
-                # HINT:
-                # delete all NA rows
-                world_happiness_report<-na.omit(world_happiness_report)
-                world_happiness_report<-world_happiness_report[order(world_happiness_report$`Perceptions of corruption`),] # sort in descending order
+              # HINT:
+              # delete all NA rows
+              world_happiness_report<-na.omit(world_happiness_report)
+              world_happiness_report<-world_happiness_report[order(world_happiness_report$`Perceptions of corruption`),] # sort in descending order
               
-                
-                #ANSWER:
+              
+              #ANSWER:
               
               Country<-c()
               Year<-c()
@@ -261,6 +226,120 @@ library(dplyr)    # for data cleaning
               Cool_Places<-data.frame(Country,Year)
               View(Cool_Places)
               
+              
+                            
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Manipulate Data
+library(dplyr)    # for data cleaning 
+          #-------------------------------------------------------------------    
+              
+              ## "Chaining" or "Pipelining"
+              
+              #* Usual way to perform multiple operations in one line is by nesting
+              #* Can write commands in a natural order by using the `%>%` infix operator (which can be pronounced as "then")
+              
+              #########@@@@ subset
+              # EXAMPLE
+              # nesting method to select UniqueCarrier and DepDelay columns and filter for delays over 60 minutes
+              filter(select(flights, UniqueCarrier, DepDelay), DepDelay > 60)
+              
+              # EXERCISE 1
+              # for each carrier, calculate the percentage of flights cancelled or diverted
+              
+              # ANSWER
+              flights %>%
+                group_by(UniqueCarrier) %>%
+                summarise_each(funs(mean), Cancelled, Diverted)
+              
+              # EXERCISE 2
+              # for each carrier, calculate the minimum and maximum arrival and departure delays
+             
+              # ANSWER
+               flights %>%
+                group_by(UniqueCarrier) %>%
+                summarise_each(funs(min(., na.rm=TRUE), max(., na.rm=TRUE)), matches("DepDelay"))
+              
+              ####@@@@ Arithmetic 
+              # EXAMPLE
+               # sum two row 3 to 15, of distance
+               sum(flights[c(3:15), "Distance"])
+               
+              # EXERCISE
+               # return a column that has the divition of rows 5 to 10 of DepDelay, into rows 11 to 16 of AirTime
+               flights[c(5:10),"DepDelay"]/flights[c(11:16),"AirTime"]
+               
+              #@@@@ Functions
+               # EXAMPLE
+               celsius_to_kelvin <- function(temp_C) {
+                 temp_K <- temp_C + 273.15
+                 return(temp_K)
+               }
+               
+               # freezing point of water in Kelvin
+               celsius_to_kelvin(0)
+               
+               
+               # EXERCISE 1
+               # create a formula that multiplies a number x and a number y, and then adds a number z
+               # make sure it works for:
+               # 1) 1,2,3
+               # 2) 4,5,3
+               # 3) 0,3,7
+               
+               # ANSWER
+               new.function <- function(x,y,z) {
+                 result <- x * y + z
+                 print(result)
+               }
+               
+               new.function(1,2,3)
+               new.function(4,5,3)
+               new.function(0,3,7)
+               
+               
+               
+               # EXERCISE 2
+               # add a column in our dataset that has the compounded interest rate of each savings account
+               # please do this by creating a function that returns the compounded interest rate of each account 
+               # make sure that it works for dataset1, dataset2, and dataset3
+               # additionally, please round the result for 2 decimal numbers, since we are working with money
+               # you can see the formula here: https://financeformulas.net/Compound_Interest.html
+               
+               
+               # dataset 1
+               Principal<-c(100,100,100,201,232,203,100,402,92) # this is in thousands
+               rate_per_period<-c(0.08,0.02,0.13,0.04,0.021,0.09,0.2,0.13,0.15)
+               number_of_periods<-c(12,12,12,12,6,24,12,72,12)
+               myloans1<-data.frame(Principal,rate_per_period,number_of_periods)
+               
+               #dataset2
+               myloans2<-dataset1^2
+               
+               #dataset3
+               myloans3<-dataset1/2
+               
+               # ANSWER
+               Compound_int <- function(dataset) {
+                 my_interest<-c()
+                 for (i in (1:nrow(dataset))){
+                 my_interest[i] <- dataset$Principal[i]*((1+dataset$rate_per_period[i])^dataset$number_of_periods[i]-1)
+                 }
+                 return(my_interest)
+               }
+               
+               myloans1$Compound_interest<-round(Compound_int(myloans1), 2)
+               myloans2$Compounded_interest<-round(Compound_int(myloans2), 2)
+               myloans3$Compounded_interest<-round(Compound_int(myloans3), 2)
+               
+              
+              #@@@@@@@@@ descriptive statistics
+               mean(myloans1$Principal)
+               var(myloans2$Principal)
+               
+               summary(myloans1)
+               
+               
+            
+
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SUPERVISED MACHINE LEARNING
               
               #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -440,5 +519,89 @@ library(dplyr)    # for data cleaning
               
               fit <- rpart(survived~., data = titanic, method = 'class')
               rpart.plot(fit, extra = 106)
+              
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Forecasting
+              # import stock data
+              library(quantmod)
+              getSymbols("GOOGL",src="yahoo") # confirm if this is the GOOGLE data
+              GOOGLE<- GOOGL[,"GOOGL.Close"] # choose the closing price of the stock
+              class(GOOGLE) # with this, we confirm that our class is "xts", and "zoo" means that GOOGLE
+              # stock is in time index format
+              GOOGLE<- GOOGLE[(index(GOOGLE) >= "2015-01-01" & index(GOOGLE) <= "2020-12-31"),] 
+       
+            GOOGLE<-na.omit(GOOGLE)
+              ### Point Forecasts
+              # Note: A point forecast is the mean of all possible future sample paths. So the point forecasts are usually much less variable than the data.
+              # we will forecast for the next 10 days 
+              
+              library(forecast)
+              m_ets = ets(GOOGLE) #exponential smoothing
+              f_ets = forecast(m_ets, h=10) # forecast de exponential smoothing
+              # plot( f_ets)
+              
+              m_aa = auto.arima(GOOGLE)  # Auto ARIMA
+              f_aa = forecast(m_aa, h=10)   # forecast de ARIMA
+              # plot(f_aa)
+             
+             
+              m_holt <- HoltWinters(GOOGLE, gamma=FALSE)
+              f_holt=forecast(m_holt, h = 10)   # forecast Holt's Exponential Smoothing
+              # plot(f_holt)
+              m_nai<- naive(GOOGLE) #naive bayes
+              f_nai<-forecast(m_nai, h=10) # forecast naive bayes
+              # plot(f_nai)
+              m_rwf<-rwf(GOOGLE) # random walk with drift model 
+              f_rwf<-forecast(m_rwf, h=10) # drift forecast
+              #   plot(f_rwf)
+              m_nn <- nnetar(GOOGLE)  # Neural Network
+              f_nn <- forecast(m_nn, h=10)       # forecast Neural Network
+              # plot(f_nn)
+                m_a <- ma(GOOGLE,order=5) # Moving Average
+              f_ma<-forecast(m_a, h=10) # forecast MA
+              # plot(f_ma)
+             
+              
+              f_aa$mean
+              
+              
+              ### we generate graphs of the predicted values
+              # png(file='gtemps1.png', width=600, height=320)  
+              
+              library(ggplot2)   
+              gtemp.df    = data.frame(Time=c(time(f_ets$mean)), gtemp=c(f_aa$mean), gtempk=c(f_ets$mean), 
+                                       gtempl=c(f_ma$mean), gtempm=c(f_nn$mean), gtempn=c(f_holt$mean), gtempo=c(f_nai$mean))
+              ggplot(data = gtemp.df, aes(x=Time, y=value, color=variable )  )             +
+                ylab('Price')                                 +
+                geom_line(aes(y=gtemp , col='ARIMA'), size=1, alpha=.5)   +
+                geom_line(aes(y=gtempk, col='ETS'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempl, col='Moving Average'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempm, col='Neural Network'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempn, col='Holt Winters'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempo, col='Naive Bayes'),  size=1, alpha=.5)   +
+                theme(legend.position=c(.1,.85))	         
+              #  dev.off() 
+              
+              
+              
+              
+              
+              # graph of model performance
+              # png(file='gtemps2.png', width=600, height=320)  
+              
+              library(ggplot2)   
+              gtemp.df    = data.frame(Time=c(time(GOOGLE)), gtemp=c(f_aa$fitted), gtempk=c(f_ets$fitted), gtempl=c(f_holt$fitted), 
+                                       gtempm=c(f_nn$fitted), gtempn=c(GOOGLE$GOOGL.Close), gtempo=c(f_nai$fitted))
+              ggplot(data = gtemp.df, aes(x=Time, y=value, color=variable )  )             +
+                ylab('Price')                                 +
+                geom_line(aes(y=gtemp , col='ARIMA'), size=1, alpha=.5)   +
+                geom_line(aes(y=gtempk, col='ETS'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempl, col='Holt Winters'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempm, col='Neural Network'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempn, col='GOOGLE'),  size=1, alpha=.5)   +
+                geom_line(aes(y=gtempo, col='Naive Bayes'),  size=1, alpha=.5)   +
+                theme(legend.position=c(.1,.85))	         
+              
+              #  dev.off() 
               
               
